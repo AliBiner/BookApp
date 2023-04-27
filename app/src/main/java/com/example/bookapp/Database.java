@@ -13,8 +13,8 @@ public class Database extends SQLiteOpenHelper {
     private static final String dbName = "KitapUygulaması.db";
     private static final int dbVersion=1;
 
-    private static final String tableName = "kitaplar";
-    private static final String columnId = "id";
+    private static final String tableName = "kitaplar2";
+    private static final String columnId = "_id";
     private static final String columnTitle = "baslik";
     private static final String columnAuthor = "yazar";
     private static final String columnPages="sayfalar";
@@ -51,8 +51,6 @@ public class Database extends SQLiteOpenHelper {
         }else {
             Toast.makeText(context, "İşlem Başarılı :)", Toast.LENGTH_SHORT).show();
         }
-
-
     }
     Cursor BilgiGetir(){
         String query = "SELECT * FROM " + tableName;
@@ -64,20 +62,35 @@ public class Database extends SQLiteOpenHelper {
         }
         return cursor;
     }
-    public void BilgiGuncelle(String row_id ,String kitapAd, String yazar, String sayfalar ) {
+    public void BilgiGuncelle(String id ,String kitapAd, String yazar, String sayfalar ) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(columnTitle, kitapAd);
         contentValues.put(columnAuthor, yazar);
         contentValues.put(columnPages, sayfalar);
 
-        long result = sqLiteDatabase.update(tableName, contentValues, "id = "+row_id, null);
+        long result = sqLiteDatabase.update(tableName, contentValues, "_id=?", new String[]{id});
 
         if (result == -1) {
             Toast.makeText(context, "Güncelleme Başarısız :(", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "Güncelleme Başarılı :)", Toast.LENGTH_SHORT).show();
-            Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void Sil(String id){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        long result = sqLiteDatabase.delete(tableName, "_id=?", new String[]{id});
+        if (result == -1){
+            Toast.makeText(context, "Silme İşlemi Başarısız :(", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(context, "Silme İşlemi Başarılı :)", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void HepsiniSil(){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL("DELETE FROM " + tableName);
+    }
+
 }

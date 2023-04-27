@@ -49,4 +49,16 @@
             app:layout_constraintTop_toBottomOf="@+id/etSayfaGuncelle" android:layout_marginEnd="161dp"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="156dp" android:layout_marginTop="20dp"/>
+    <Button
+            android:text="Sil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnSil"
+            app:layout_constraintTop_toBottomOf="@+id/btnGuncelle"
+            android:layout_marginEnd="161dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="156dp"
+            android:layout_marginTop="20dp"
+    />
 </androidx.constraintlayout.widget.ConstraintLayout>

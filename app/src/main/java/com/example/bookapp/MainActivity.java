@@ -1,10 +1,19 @@
 package com.example.bookapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     FloatingActionButton btnEkle;
+    ImageView imgVeriYok;
+    TextView tvVeriYok;
     Database database;
 
     ArrayList<String> columnId, columnTitle, columnAuthor,columnPages;
@@ -29,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         btnEkle = findViewById(R.id.btnEkle);
+        imgVeriYok = findViewById(R.id.imgVeriYok);
+        tvVeriYok = findViewById(R.id.tvVeriYok);
         btnEkle.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, EkleActivity.class);
             startActivity(intent);
@@ -41,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         columnTitle = new ArrayList<>();
         columnAuthor = new ArrayList<>();
         columnPages = new ArrayList<>();
+
         donustur = new Donustur(MainActivity.this,columnId,columnTitle,columnAuthor,columnPages,this);
         recyclerView.setAdapter(donustur);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
@@ -58,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
     void BilgiListele(){
         Cursor cursor = database.BilgiGetir();
         if (cursor.getCount()==0){
-            Toast.makeText(this, "Veri Yok", Toast.LENGTH_SHORT).show();
+            imgVeriYok.setVisibility(View.VISIBLE);
+            tvVeriYok.setVisibility(View.VISIBLE);
 
         }else{
             while (cursor.moveToNext()){
@@ -67,8 +82,43 @@ public class MainActivity extends AppCompatActivity {
                 columnAuthor.add(cursor.getString(2));
                 columnPages.add(cursor.getString(3));
             }
+            imgVeriYok.setVisibility(View.GONE);
+            tvVeriYok.setVisibility(View.GONE);
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.HepsiniSil){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("!Hespi!");
+            builder.setMessage("Hepsini mi silmek istiyorsunuz?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Database database1 = new Database(MainActivity.this);
+                    database1.HepsiniSil();
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            builder.create().show();
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

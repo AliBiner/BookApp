@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -18,6 +20,8 @@ public class Donustur extends RecyclerView.Adapter<Donustur.ViewHolder> {
     ArrayList kitapId, kitapAd, yazar, sayfa;
     Context context;
     Activity activity;
+
+    Animation ceviri;
 
     Donustur(Activity activity, ArrayList kitapId, ArrayList kitapAd, ArrayList yazar, ArrayList sayfa, Context context) {
         this.activity=activity;
@@ -48,11 +52,11 @@ public class Donustur extends RecyclerView.Adapter<Donustur.ViewHolder> {
             holder.listLayout.setTag(holder);
             holder.listLayout.setOnClickListener(v -> {
                Intent intent = new Intent(context,GuncellemeActivity.class);
-               intent.putExtra("id",String.valueOf(kitapId.get(position)));
-               intent.putExtra("kitapAd",String.valueOf(kitapAd.get(position)));
-                intent.putExtra("yazar",String.valueOf(yazar.get(position)));
-               intent.putExtra("sayfa",String.valueOf(sayfa.get(position)));
-              activity.startActivityForResult(intent,1);
+               intent.putExtra("id",String.valueOf(kitapId.get(holder.getAdapterPosition())));
+               intent.putExtra("kitapAd",String.valueOf(kitapAd.get(holder.getAdapterPosition())));
+               intent.putExtra("yazar",String.valueOf(yazar.get(holder.getAdapterPosition())));
+               intent.putExtra("sayfa",String.valueOf(sayfa.get(holder.getAdapterPosition())));
+               activity.startActivityForResult(intent,1);
             });
     }
 
@@ -61,9 +65,10 @@ public class Donustur extends RecyclerView.Adapter<Donustur.ViewHolder> {
         return kitapId.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvKitapId, tvKitapAd, tvKitapYazar,tvSayfa;
         LinearLayout listLayout;
+        Animation animation;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvKitapId = itemView.findViewById(R.id.tvKitapId);
@@ -71,6 +76,8 @@ public class Donustur extends RecyclerView.Adapter<Donustur.ViewHolder> {
             tvKitapYazar = itemView.findViewById(R.id.tvKitapYazar);
             tvSayfa = itemView.findViewById(R.id.tvSayfa);
             listLayout = itemView.findViewById(R.id.listLayout);
+            animation = AnimationUtils.loadAnimation(context , R.anim.ceviri);
+            listLayout.setAnimation(animation);
         }
     }
 }
